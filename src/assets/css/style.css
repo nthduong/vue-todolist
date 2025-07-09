@@ -1,5 +1,8 @@
 body {
-    font-size: 16px;
-    background-color: #f1f0e9;
-  }
-  
+  font-size: 16px;
+  background-color: #f1f0e9;
+}
+
+button:hover {
+  cursor: pointer;
+}
