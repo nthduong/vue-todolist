@@ -1,7 +1,20 @@
+<script setup>
+import { ref } from 'vue'
+import { useTodoStore } from '@/stores/useTodoStore'
+const store = useTodoStore()
+const textForm = ref('')
+let text = ''
+let index = 0
+const onSubmit = () => {
+  text = textForm
+  store.todos.push({ id: index++, text: text })
+}
+</script>
+
 <template>
-  <form v-on:submit.prevent="">
+  <form v-on:submit.prevent="onSubmit">
     <div class="form__group mt-10">
-      <input type="text" class="form__input" />
+      <input type="text" class="form__input" v-model="textForm" />
       <button class="form__act">Add</button>
     </div>
   </form>
@@ -12,7 +25,7 @@
   &__group {
     display: flex;
     align-items: center;
-    height: 50px;
+    height: 60px;
     width: 100%;
     border: 2px solid #ccc;
     border-radius: 8px;
@@ -39,6 +52,8 @@
     font-weight: 700;
     border-radius: 8px;
     margin: 4px;
+    margin-right: 10px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   }
 }
 </style>

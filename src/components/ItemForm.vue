@@ -1,9 +1,15 @@
+<script setup>
+defineProps({
+  todo: [String, Object],
+})
+</script>
+
 <template>
   <div>
-    <label for="item-check" class="item">
+    <label :for="todo.id" class="item">
       <div class="ml-6">
-        <input id="item-check" class="item__input" type="checkbox" />
-        <span class="item__text">Like</span>
+        <input :id="todo.id" class="item__input" type="checkbox" hidden />
+        <span class="item__text">{{ todo.text }}</span>
       </div>
       <div class="flex gap-4 mr-6">
         <button><img src="../assets/icon/pen.svg" alt="" class="item__icon" /></button>
@@ -20,39 +26,47 @@
   height: 60px;
   background: #748873;
   border-radius: 8px;
-  margin-top: 30px;
+  margin-top: 15px;
   user-select: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 
   &__text {
     position: relative;
     color: #fff;
     font-size: 18px;
-    margin-left: 5px;
+    margin-left: 30px;
     font-weight: 700;
   }
 
   &__text::before {
     content: '';
     position: absolute;
-    width: 16px;
-    height: 16px;
-    border: 1px solid #fff;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
     border-radius: 100%;
-    top: 0;
-    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -30px;
   }
   &__text::after {
     content: '';
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     background: #fff;
     border-radius: 100%;
-    top: 0;
-    left: 0;
+    top: 4px;
+    left: -26px;
+    display: none;
+  }
+
+  &__input:checked ~ .item__text::after {
+    display: block;
   }
 
   &__icon {
