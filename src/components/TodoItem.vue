@@ -1,7 +1,20 @@
 <script setup>
-defineProps({
-  todo: [String, Object],
+import { useTodoStore } from '@/stores/useTodoStore'
+const store = useTodoStore()
+const props = defineProps({
+  todo: {
+    type: [String, Number, Function, Object],
+    required: true,
+  },
 })
+const emit = defineEmits(['IdItem'])
+const removeItem = () => {
+  emit('IdItem', props.todo.id)
+}
+const showModal = () => {
+  store.isShowModal = true
+  store.currentId = props.todo.id
+}
 </script>
 
 <template>
@@ -9,11 +22,15 @@ defineProps({
     <label :for="todo.id" class="item">
       <div class="ml-6">
         <input :id="todo.id" class="item__input" type="checkbox" hidden />
-        <span class="item__text">{{ todo.text }}</span>
+        <span class="item__text">{{ todo.text }} {{ todo.id }}</span>
       </div>
       <div class="flex gap-4 mr-6">
-        <button><img src="../assets/icon/pen.svg" alt="" class="item__icon" /></button>
-        <button><img src="../assets/icon/trash.svg" alt="" class="item__icon" /></button>
+        <button @click="showModal">
+          <img src="../assets/icon/pen.svg" alt="" class="item__icon" />
+        </button>
+        <button @click="removeItem">
+          <img src="../assets/icon/trash.svg" alt="" class="item__icon" />
+        </button>
       </div>
     </label>
   </div>
