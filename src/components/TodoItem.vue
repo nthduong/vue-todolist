@@ -4,7 +4,7 @@ const modalStore = useModalStore()
 const emit = defineEmits(['deleteTodo'])
 const props = defineProps({
   todo: {
-    type: [String, Number, Function, Object],
+    type: [Object],
     required: true,
   },
 })

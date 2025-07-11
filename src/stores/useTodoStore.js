@@ -5,7 +5,7 @@ import { useModalStore } from '@/stores/useModalStore'
 export const useTodoStore = defineStore('todos', () => {
   const modalStore = useModalStore()
   const todos = ref([])
-  
+
   function addTodo(text) {
     const id = Date.now()
     todos.value.push({ id, text })
@@ -15,7 +15,7 @@ export const useTodoStore = defineStore('todos', () => {
   }
   function updateTodo(newText) {
     todos.value.forEach((todo) => {
-      if (todo.id === modalStore.currentId) {
+      if (todo.id === modalStore.currentIdModal) {
         todo.text = newText
       }
     })

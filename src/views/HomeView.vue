@@ -11,23 +11,24 @@ const modalStore = useModalStore()
 const closeModal = () => {
   modalStore.closeModal()
 }
-
 const updateTodo = () => {
-  if (modalStore.currentText.trim() === '') return
-  todoStore.updateTodo(modalStore.currentText)
+  if (modalStore.currentTextModal.trim() === '') return
+  todoStore.updateTodo(modalStore.currentTextModal)
   modalStore.closeModal()
 }
 </script>
 <template>
   <div class="container mx-auto px-4">
     <todo-form />
-    <div class="mt-10"></div>
-    <todo-list />
+    <div class="mt-10">
+      <todo-list />
+    </div>
+
     <todo-modal v-if="modalStore.isShowModal">
       <template #header> Edit Todo </template>
 
       <template #body>
-        <input type="text" class="Modal-input" v-model="modalStore.currentText" />
+        <input type="text" class="Modal-input" v-model="modalStore.currentTextModal" />
       </template>
 
       <template #footer>
