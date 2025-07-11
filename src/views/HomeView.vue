@@ -11,9 +11,9 @@ const modalStore = useModalStore()
 const closeModal = () => {
   modalStore.closeModal()
 }
-const updateTodo = () => {
+const updateTextTodo = () => {
   if (modalStore.currentTextModal.trim() === '') return
-  todoStore.updateTodo(modalStore.currentTextModal)
+  todoStore.updateTextTodo(modalStore.currentTextModal, modalStore.currentIdModal)
   modalStore.closeModal()
 }
 </script>
@@ -32,7 +32,7 @@ const updateTodo = () => {
       </template>
 
       <template #footer>
-        <button @click="updateTodo" class="btn">Ok</button>
+        <button @click="updateTextTodo" class="btn">Ok</button>
         <button @click="closeModal" class="btn btn__cancel">Cancel</button>
       </template>
     </todo-modal>

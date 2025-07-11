@@ -1,28 +1,31 @@
 <script setup>
 import { useModalStore } from '@/stores/useModalStore'
+import { ref } from 'vue'
 const modalStore = useModalStore()
-const emit = defineEmits(['deleteTodo'])
+const emit = defineEmits(['removeTodo','toggleCompleted'])
 const props = defineProps({
   todo: {
     type: [Object],
     required: true,
   },
 })
-
+const isCheck = ref(props.todo.completed)
+const toggleCompleted = ()  => {
+  emit('toggleCompleted', { id: props.todo.id, completed: isCheck.value })
+}
 const removeTodo = () => {
-  emit('deleteTodo', props.todo.id)
+  emit('removeTodo', props.todo.id)
 }
 const showModal = () => {
   modalStore.openModal(props.todo)
 }
-
 </script>
 
 <template>
   <div>
     <label :for="todo.id" class="item">
       <div class="ml-6">
-        <input :id="todo.id" class="item__input" type="checkbox" hidden />
+        <input :id="todo.id" class="item__input" type="checkbox" hidden  v-model="isCheck" @change="toggleCompleted"/>
         <span class="item__text">{{ todo.text }}</span>
       </div>
       <div class="flex gap-4 mr-6">
