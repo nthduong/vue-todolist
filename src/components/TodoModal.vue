@@ -10,6 +10,7 @@
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .Modal {
   inset: 0;

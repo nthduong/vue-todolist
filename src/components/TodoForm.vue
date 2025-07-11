@@ -3,9 +3,10 @@ import { ref } from 'vue'
 import { useTodoStore } from '@/stores/useTodoStore'
 const store = useTodoStore()
 const textForm = ref('')
-let index = 0
+
 const onSubmit = () => {
-  store.todos.push({ id: index++, text: textForm.value })
+  if (textForm.value.trim() === '') return
+  store.addTodo(textForm.value)
   textForm.value = ''
 }
 </script>

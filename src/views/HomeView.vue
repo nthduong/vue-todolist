@@ -3,18 +3,19 @@ import TodoForm from '@/components/TodoForm.vue'
 import TodoList from '@/components/TodoList.vue'
 import TodoModal from '@/components/TodoModal.vue'
 import { useTodoStore } from '@/stores/useTodoStore'
-import { ref } from 'vue'
-const store = useTodoStore()
-const modalText = ref('')
+import { useModalStore } from '@/stores/useModalStore'
+
+const todoStore = useTodoStore()
+const modalStore = useModalStore()
 
 const closeModal = () => {
-  store.isShowModal = false
-  modalText.value = ''
+  modalStore.closeModal()
 }
-const changeText = () => {
-  store.changeText(modalText.value)
-  store.isShowModal = false
-  modalText.value = ''
+
+const updateTodo = () => {
+  if (modalStore.currentText.trim() === '') return
+  todoStore.updateTodo(modalStore.currentText)
+  modalStore.closeModal()
 }
 </script>
 <template>
@@ -22,15 +23,15 @@ const changeText = () => {
     <todo-form />
     <div class="mt-10"></div>
     <todo-list />
-    <todo-modal v-if="store.isShowModal">
+    <todo-modal v-if="modalStore.isShowModal">
       <template #header> Edit Todo </template>
 
       <template #body>
-        <input type="text" class="Modal-input" v-model="modalText" />
+        <input type="text" class="Modal-input" v-model="modalStore.currentText" />
       </template>
 
       <template #footer>
-        <button @click="changeText" class="btn">Ok</button>
+        <button @click="updateTodo" class="btn">Ok</button>
         <button @click="closeModal" class="btn btn__cancel">Cancel</button>
       </template>
     </todo-modal>

@@ -1,26 +1,24 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { computed } from 'vue'
+import { useModalStore } from '@/stores/useModalStore'
 
 export const useTodoStore = defineStore('todos', () => {
+  const modalStore = useModalStore()
   const todos = ref([])
-  const currentId = ref(null)
-  const isShowModal = ref(false)
-
-  const currentText = computed(() => {
-    return todos.value.find((todo) => todo.id === currentId.value)
-  })
-
-  function removeItem(id) {
+  
+  function addTodo(text) {
+    const id = Date.now()
+    todos.value.push({ id, text })
+  }
+  function removeTodo(id) {
     todos.value = todos.value.filter((todo) => todo.id !== id)
   }
-
-  function changeText(newText) {
+  function updateTodo(newText) {
     todos.value.forEach((todo) => {
-      if (todo.id === currentId.value) {
+      if (todo.id === modalStore.currentId) {
         todo.text = newText
       }
     })
   }
-  return { todos, removeItem, isShowModal, changeText, currentId, currentText }
+  return { todos, removeTodo, updateTodo, addTodo }
 })
