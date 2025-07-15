@@ -54,9 +54,9 @@ const showModal = () => {
           v-model="isCheck"
           @change="toggleCompleted"
         />
-        <span class="item__text" :class="{ isCheck: isCheck }">{{ todo.text }}</span>
+        <span class="item__text" :class="{ isCheck: isCheck,completed: isCheck }" >{{ todo.text }}</span>
       </div>
-      <div class="flex mr-4">
+      <div class="flex mr-4" :class="{ completed: isCheck }">
         <button @click="showModal" class="p-2.5">
           <img src="../assets/icon/pen.svg" alt="" class="item__icon" />
         </button>
@@ -128,6 +128,8 @@ const showModal = () => {
 }
 .isCheck {
   text-decoration: line-through;
+}
+.completed {
   opacity: 0.5;
 }
 </style>

@@ -1,21 +1,11 @@
 <script setup>
-import TodoForm from '@/components/TodoForm.vue'
-import TodoList from '@/components/TodoList.vue'
-import TodoModal from '@/components/TodoModal.vue'
+import TodoForm from '@/components/Todo/TodoForm.vue'
+import TodoList from '@/components/Todo/TodoList.vue'
+import TodoEditModal from '@/components/Todo/TodoEditModal.vue'
 import { useTodoStore } from '@/stores/useTodoStore'
-import { useModalStore } from '@/stores/useModalStore'
 
 const todoStore = useTodoStore()
-const modalStore = useModalStore()
 
-const closeModal = () => {
-  modalStore.closeModal()
-}
-const updateTextTodo = () => {
-  if (modalStore.currentTextModal.trim() === '') return
-  todoStore.updateTextTodo(modalStore.currentTextModal, modalStore.currentIdModal)
-  modalStore.closeModal()
-}
 const sortTodos = () => {
   todoStore.sortTodos()
 }
@@ -39,34 +29,11 @@ const removeAll = () => {
       </div>
       <todo-list class="relative" />
     </div>
-    <transition name="fade">
-      <todo-modal v-if="modalStore.isShowModal">
-        <template #header> Edit Todo </template>
-
-        <template #body>
-          <input type="text" class="Modal-input" v-model="modalStore.currentTextModal" />
-        </template>
-
-        <template #footer>
-          <button @click="updateTextTodo" class="btn">Ok</button>
-          <button @click="closeModal" class="btn btn__cancel">Cancel</button>
-        </template>
-      </todo-modal>
-    </transition>
+    <todo-edit-modal />
   </div>
 </template>
 
 <style lang="scss" scoped>
-.Modal-input {
-  width: 100%;
-  height: 40px;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  outline: none;
-  font-weight: 700;
-  padding: 0px 5px 0 5px;
-}
-
 .btn {
   min-width: 70px;
   padding: 8px 12px;
@@ -91,18 +58,4 @@ const removeAll = () => {
   color: #748873;
   margin-left: auto;
 }
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
-}
-
 </style>

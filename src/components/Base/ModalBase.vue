@@ -1,8 +1,15 @@
-<script setup></script>
+<script setup>
+defineProps({
+  width: {
+    type: String,
+    default: '400px',
+  },
+})
+</script>
 
 <template>
   <div class="Modal">
-    <div class="overlay"></div>
+    <div class="overlay" @click="$emit('close')"></div>
     <div class="content">
       <h1 class="Modal__heading"><slot name="header"></slot></h1>
       <div class="Modal__body"><slot name="body"></slot></div>
@@ -44,7 +51,7 @@
   background: #fff;
   z-index: 1;
   border-radius: 8px;
-  width: 400px;
+  width: v-bind(width);
   margin: 40px;
 }
 </style>
