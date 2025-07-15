@@ -36,7 +36,7 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .content {
@@ -45,5 +45,6 @@
   z-index: 1;
   border-radius: 8px;
   width: 400px;
+  margin: 40px;
 }
 </style>

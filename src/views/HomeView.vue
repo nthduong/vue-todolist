@@ -39,19 +39,20 @@ const removeAll = () => {
       </div>
       <todo-list class="relative" />
     </div>
+    <transition name="fade">
+      <todo-modal v-if="modalStore.isShowModal">
+        <template #header> Edit Todo </template>
 
-    <todo-modal v-if="modalStore.isShowModal">
-      <template #header> Edit Todo </template>
+        <template #body>
+          <input type="text" class="Modal-input" v-model="modalStore.currentTextModal" />
+        </template>
 
-      <template #body>
-        <input type="text" class="Modal-input" v-model="modalStore.currentTextModal" />
-      </template>
-
-      <template #footer>
-        <button @click="updateTextTodo" class="btn">Ok</button>
-        <button @click="closeModal" class="btn btn__cancel">Cancel</button>
-      </template>
-    </todo-modal>
+        <template #footer>
+          <button @click="updateTextTodo" class="btn">Ok</button>
+          <button @click="closeModal" class="btn btn__cancel">Cancel</button>
+        </template>
+      </todo-modal>
+    </transition>
   </div>
 </template>
 
@@ -73,6 +74,7 @@ const removeAll = () => {
   font-weight: 700;
   background: #748873;
   color: #fff;
+  user-select: none;
 
   + .btn {
     margin-left: 10px;
@@ -89,4 +91,18 @@ const removeAll = () => {
   color: #748873;
   margin-left: auto;
 }
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
+
 </style>
