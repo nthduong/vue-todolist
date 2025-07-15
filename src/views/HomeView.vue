@@ -16,12 +16,28 @@ const updateTextTodo = () => {
   todoStore.updateTextTodo(modalStore.currentTextModal, modalStore.currentIdModal)
   modalStore.closeModal()
 }
+const sortTodos = () => {
+  todoStore.sortTodos()
+}
+const removeAll = () => {
+  todoStore.removeAll()
+}
 </script>
 <template>
   <div class="container mx-auto px-4">
     <todo-form />
-    <div class="mt-10">
-      <todo-list />
+    <div class="flex">
+      <h1 class="todo-desc">
+        You have {{ todoStore.completedTodoCount }}
+        {{ todoStore.completedTodoCount > 1 ? 'tasks' : 'task' }} to complete
+      </h1>
+    </div>
+    <div class="mt-10 flex flex-col">
+      <div class="ml-auto">
+        <button @click="removeAll" class="btn">Delete All</button>
+        <button @click="sortTodos" class="btn">Oldest Tasks</button>
+      </div>
+      <todo-list class="relative" />
     </div>
 
     <todo-modal v-if="modalStore.isShowModal">
@@ -65,5 +81,12 @@ const updateTextTodo = () => {
   &__cancel {
     background: #e84a5f;
   }
+}
+
+.todo-desc {
+  font-weight: 700;
+  margin-top: 10px;
+  color: #748873;
+  margin-left: auto;
 }
 </style>

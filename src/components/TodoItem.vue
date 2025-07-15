@@ -1,12 +1,19 @@
 <script setup>
 import { useModalStore } from '@/stores/useModalStore'
+import { useTodoStore } from '@/stores/useTodoStore'
+
 import { ref, watch } from 'vue'
 const modalStore = useModalStore()
+const todoStore = useTodoStore()
+
 const emit = defineEmits(['removeTodo', 'toggleCompleted'])
 const props = defineProps({
   todo: {
     type: [Object],
     required: true,
+    validator: (value) => {
+      return value && 'id' in value && 'completed' in value
+    },
   },
 })
 const isCheck = ref(props.todo.completed)
@@ -16,10 +23,14 @@ watch(
   (newVal) => {
     isCheck.value = newVal
   },
+  { immediate: true },
 )
 
 const toggleCompleted = () => {
   emit('toggleCompleted', { id: props.todo.id, completed: isCheck.value })
+  if (isCheck.value === true) {
+    todoStore.moveToBottom(props.todo.id)
+  }
 }
 const removeTodo = () => {
   console.log(props.todo)
@@ -43,13 +54,13 @@ const showModal = () => {
           v-model="isCheck"
           @change="toggleCompleted"
         />
-        <span class="item__text">{{ todo.text }}</span>
+        <span class="item__text" :class="{ isCheck: isCheck }">{{ todo.text }}</span>
       </div>
-      <div class="flex gap-4 mr-6">
-        <button @click="showModal">
+      <div class="flex mr-4">
+        <button @click="showModal" class="p-2.5">
           <img src="../assets/icon/pen.svg" alt="" class="item__icon" />
         </button>
-        <button @click="removeTodo">
+        <button @click="removeTodo" class="p-2.5">
           <img src="../assets/icon/trash.svg" alt="" class="item__icon" />
         </button>
       </div>
@@ -71,6 +82,7 @@ const showModal = () => {
   justify-content: space-between;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  user-select: none;
 
   &__text {
     position: relative;
@@ -113,5 +125,8 @@ const showModal = () => {
     filter: brightness(0) saturate(100%) invert(95%) sepia(0%) saturate(20%) hue-rotate(289deg)
       brightness(103%) contrast(108%);
   }
+}
+.isCheck {
+  text-decoration: line-through;
 }
 </style>
