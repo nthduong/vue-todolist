@@ -128,5 +128,6 @@ const showModal = () => {
 }
 .isCheck {
   text-decoration: line-through;
+  opacity: 0.5;
 }
 </style>
