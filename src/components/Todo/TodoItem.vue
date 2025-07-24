@@ -54,14 +54,16 @@ const showModal = () => {
           v-model="isCheck"
           @change="toggleCompleted"
         />
-        <span class="item__text" :class="{ isCheck: isCheck,completed: isCheck }" >{{ todo.text }}</span>
+        <span class="item__text" :class="{ isCheck: isCheck, completed: isCheck }">{{
+          todo.text
+        }}</span>
       </div>
       <div class="flex mr-4" :class="{ completed: isCheck }">
         <button @click="showModal" class="p-2.5">
-          <img src="../assets/icon/pen.svg" alt="" class="item__icon" />
+          <img src="../../assets/icon/pen.svg" alt="" class="item__icon" />
         </button>
         <button @click="removeTodo" class="p-2.5">
-          <img src="../assets/icon/trash.svg" alt="" class="item__icon" />
+          <img src="../../assets/icon/trash.svg" alt="" class="item__icon" />
         </button>
       </div>
     </label>
@@ -74,7 +76,7 @@ const showModal = () => {
   width: 100%;
   height: 60px;
   background: #748873;
-  border-radius: 8px;
+  border-radius: 50px;
   margin-top: 15px;
   user-select: none;
   display: flex;

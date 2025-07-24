@@ -50,7 +50,7 @@ defineProps({
   padding: 30px;
   background: #fff;
   z-index: 1;
-  border-radius: 8px;
+  border-radius: 15px;
   width: v-bind(width);
   margin: 40px;
 }

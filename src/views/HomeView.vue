@@ -1,10 +1,15 @@
 <script setup>
+import { onMounted } from 'vue';
 import TodoForm from '@/components/Todo/TodoForm.vue'
 import TodoList from '@/components/Todo/TodoList.vue'
 import TodoEditModal from '@/components/Todo/TodoEditModal.vue'
 import { useTodoStore } from '@/stores/useTodoStore'
 
 const todoStore = useTodoStore()
+
+onMounted(async () => {
+  await todoStore.fetchTodos()
+})
 
 const sortTodos = () => {
   todoStore.sortTodos()
@@ -35,9 +40,9 @@ const removeAll = () => {
 
 <style lang="scss" scoped>
 .btn {
-  min-width: 70px;
+  min-width: 130px;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: 50px;
   font-weight: 700;
   background: #748873;
   color: #fff;

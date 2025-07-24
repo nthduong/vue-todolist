@@ -1,19 +1,37 @@
+import { v4 as uuidv4 } from 'uuid'
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
+import * as todoService from '@/services/todoService'
 
 export const useTodoStore = defineStore('todos', () => {
   const todos = ref([])
+  const loading = ref(false)
+  const error = ref(null)
 
   const completedTodoCount = computed(() => todos.value.filter((todo) => !todo.completed).length)
 
-  function addTodo(text) {
-    const id = Date.now()
-    todos.value.unshift({ id, text, completed: false })
+  const fetchTodos = async () => {
+    loading.value = true
+    try {
+      const response = await todoService.getTodos()
+      todos.value = response.data
+    } catch (err) {
+      error.value = err.message
+    } finally {
+      loading.value = false
+    }
   }
-  function removeTodo(id) {
+
+  const addTodo = async (text) => {
+    const newTodo = { id: uuidv4(), text, completed: false, createdAt: new Date().toISOString() }
+    const response = await todoService.createTodo(newTodo)
+    todos.value.unshift(response.data)
+  }
+  const removeTodo = async (id) => {
+    await todoService.deleteTodo(id)
     todos.value = todos.value.filter((todo) => todo.id !== id)
   }
-  function removeAll() {
+  const removeAll = async () => {
     todos.value = []
   }
   function updateTextTodo(newText, id) {
@@ -40,13 +58,16 @@ export const useTodoStore = defineStore('todos', () => {
   }
   return {
     todos,
-    removeTodo,
-    updateTextTodo,
-    addTodo,
-    updateCheckTodo,
+    loading,
+    error,
     completedTodoCount,
+    fetchTodos,
+    addTodo,
+    updateTextTodo,
+    updateCheckTodo,
     moveToBottom,
     sortTodos,
+    removeTodo,
     removeAll,
   }
 })

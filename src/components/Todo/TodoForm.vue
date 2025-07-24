@@ -4,9 +4,12 @@ import { useTodoStore } from '@/stores/useTodoStore'
 const store = useTodoStore()
 const textForm = ref('')
 
-const onSubmit = () => {
+const onSubmit = async (e) => {
+  e.preventDefault()
+  console.log(1)
+
   if (textForm.value.trim() === '') return
-  store.addTodo(textForm.value)
+  await store.addTodo(textForm.value)
   textForm.value = ''
 }
 </script>
@@ -15,7 +18,7 @@ const onSubmit = () => {
   <form v-on:submit.prevent="onSubmit">
     <div class="form__group mt-10">
       <input type="text" class="form__input" v-model="textForm" />
-      <button class="form__act">Add</button>
+      <button type="submit" class="form__act">Add</button>
     </div>
   </form>
 </template>
@@ -28,7 +31,7 @@ const onSubmit = () => {
     height: 60px;
     width: 100%;
     border: 2px solid #ccc;
-    border-radius: 8px;
+    border-radius: 50px;
     padding-left: 10px;
   }
   &__input {
@@ -50,7 +53,7 @@ const onSubmit = () => {
     color: #fff;
     font-size: 18px;
     font-weight: 700;
-    border-radius: 8px;
+    border-radius: 50px;
     margin: 4px;
     margin-right: 10px;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);

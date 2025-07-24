@@ -1,0 +1,22 @@
+{
+  "todos": [
+    {
+      "id": "862aa525-1931-4035-8d3b-b5370889a193",
+      "text": "one",
+      "completed": false,
+      "createdAt": "2025-07-24T10:30:40.035Z"
+    },
+    {
+      "id": "bfdbb610-6073-48f2-87ef-d9c27e0b7cc3",
+      "text": "two",
+      "completed": false,
+      "createdAt": "2025-07-24T10:32:30.244Z"
+    },
+    {
+      "id": "4e1f8526-683a-49d6-8ae0-7a83cede8998",
+      "text": "dsfsdfsdfsd",
+      "completed": false,
+      "createdAt": "2025-07-24T10:33:52.637Z"
+    }
+  ]
+}
