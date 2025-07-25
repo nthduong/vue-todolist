@@ -23,15 +23,21 @@ export const useTodoStore = defineStore('todos', () => {
   }
 
   const addTodo = async (text) => {
-    const newTodo = { id: uuidv4(), text, completed: false, createdAt: new Date().toISOString() }
-    const response = await todoService.createTodo(newTodo)
-    todos.value.unshift(response.data)
+    try {
+      const newTodo = { id: uuidv4(), text, completed: false, createdAt: new Date().toISOString() }
+      const response = await todoService.createTodo(newTodo)
+      todos.value.unshift(response.data)
+    } catch(err) {
+      console.log(err);
+    }
   }
   const removeTodo = async (id) => {
     await todoService.deleteTodo(id)
     todos.value = todos.value.filter((todo) => todo.id !== id)
   }
   const removeAll = async () => {
+    const ids = todos.value.map(todo => todo.id)
+    Promise.all(ids.map(id => await ))
     todos.value = []
   }
   function updateTextTodo(newText, id) {

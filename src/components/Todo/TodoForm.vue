@@ -4,10 +4,7 @@ import { useTodoStore } from '@/stores/useTodoStore'
 const store = useTodoStore()
 const textForm = ref('')
 
-const onSubmit = async (e) => {
-  e.preventDefault()
-  console.log(1)
-
+const onSubmit = async () => {
   if (textForm.value.trim() === '') return
   await store.addTodo(textForm.value)
   textForm.value = ''
@@ -32,7 +29,7 @@ const onSubmit = async (e) => {
     width: 100%;
     border: 2px solid #ccc;
     border-radius: 50px;
-    padding-left: 10px;
+    padding-left: 20px;
   }
   &__input {
     width: 100%;

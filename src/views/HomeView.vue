@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted } from 'vue'
 import TodoForm from '@/components/Todo/TodoForm.vue'
 import TodoList from '@/components/Todo/TodoList.vue'
 import TodoEditModal from '@/components/Todo/TodoEditModal.vue'
@@ -47,6 +47,7 @@ const removeAll = () => {
   background: #748873;
   color: #fff;
   user-select: none;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
 
   + .btn {
     margin-left: 10px;
