@@ -11,7 +11,7 @@ const closeModal = () => {
 }
 const updateTextTodo = () => {
   if (modalStore.currentTextModal.trim() === '') return
-  todoStore.updateTextTodo(modalStore.currentTextModal, modalStore.currentIdModal)
+  todoStore.updateTextTodo(modalStore.currentIdModal,modalStore.currentTextModal)
   modalStore.closeModal()
 }
 </script>

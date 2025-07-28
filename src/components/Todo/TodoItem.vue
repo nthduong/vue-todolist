@@ -11,9 +11,6 @@ const props = defineProps({
   todo: {
     type: [Object],
     required: true,
-    validator: (value) => {
-      return value && 'id' in value && 'completed' in value
-    },
   },
 })
 const isCheck = ref(props.todo.completed)
@@ -27,10 +24,14 @@ watch(
 )
 
 const toggleCompleted = () => {
-  emit('toggleCompleted', { id: props.todo.id, completed: isCheck.value })
   if (isCheck.value === true) {
     todoStore.moveToBottom(props.todo.id)
   }
+  if (isCheck.value === false) {
+    todoStore.moveToTop(props.todo.id)
+  }
+  emit('toggleCompleted', { id: props.todo.id, completed: isCheck.value })
+  
 }
 const removeTodo = () => {
   console.log(props.todo)
@@ -112,7 +113,7 @@ const showModal = () => {
     height: 12px;
     background: #fff;
     border-radius: 100%;
-    top: 4px;
+    top: 5px;
     left: -26px;
     display: none;
   }

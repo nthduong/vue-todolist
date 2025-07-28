@@ -16,7 +16,7 @@ const toggleCompleted = ({ id, completed }) => {
 <template>
   <transition-group name="fade-move" tag="div">
     <todo-item
-      v-for="todo in todoStore.todos"
+      v-for="todo in todoStore.sortedTodos"
       :key="todo.id"
       :todo="todo"
       @removeTodo="removeTodo"

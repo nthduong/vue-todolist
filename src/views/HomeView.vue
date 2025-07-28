@@ -19,7 +19,7 @@ const removeAll = () => {
 }
 </script>
 <template>
-  <div class="container mx-auto px-4">
+  <div class="container mx-auto px-4 md:px-8 lg:px-16">
     <todo-form />
     <div class="flex">
       <h1 class="todo-desc">

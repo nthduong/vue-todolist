@@ -9,6 +9,15 @@ export const useTodoStore = defineStore('todos', () => {
   const error = ref(null)
 
   const completedTodoCount = computed(() => todos.value.filter((todo) => !todo.completed).length)
+  const sortedTodos = computed(() =>
+    [...todos.value].sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)),
+  )
+  const maxOrder = computed(() =>
+    Math.max(0, ...todos.value.map((todo) => todo.order).filter((order) => typeof order === 'number')),
+  )
+  const minOrder = Math.min(
+    ...todos.value.map((todo) => (typeof todo.order === 'number' ? todo.order : Infinity)),
+  )
 
   const fetchTodos = async () => {
     loading.value = true
@@ -24,11 +33,17 @@ export const useTodoStore = defineStore('todos', () => {
 
   const addTodo = async (text) => {
     try {
-      const newTodo = { id: uuidv4(), text, completed: false, createdAt: new Date().toISOString() }
+      const newTodo = {
+        id: uuidv4(),
+        text,
+        completed: false,
+        createdAt: new Date().toISOString(),
+        order: maxOrder.value + 1 ,
+      }
       const response = await todoService.createTodo(newTodo)
       todos.value.unshift(response.data)
-    } catch(err) {
-      console.log(err);
+    } catch (err) {
+      console.error('Unexpected error:', err)
     }
   }
   const removeTodo = async (id) => {
@@ -36,28 +51,79 @@ export const useTodoStore = defineStore('todos', () => {
     todos.value = todos.value.filter((todo) => todo.id !== id)
   }
   const removeAll = async () => {
-    const ids = todos.value.map(todo => todo.id)
-    Promise.all(ids.map(id => await ))
-    todos.value = []
-  }
-  function updateTextTodo(newText, id) {
-    todos.value.forEach((todo) => {
-      if (todo.id === id) {
-        todo.text = newText
-      }
-    })
-  }
-  function updateCheckTodo(id, completed) {
-    const todo = todos.value.find((todo) => todo.id === id)
-    if (todo) {
-      todo.completed = completed
+    try {
+      const ids = todos.value.map((todo) => todo.id)
+      await Promise.all(ids.map((id) => todoService.deleteTodo(id)))
+      todos.value = []
+    } catch (err) {
+      console.error('Unexpected error:', err)
     }
   }
-  function moveToBottom(id) {
-    const index = todos.value.findIndex((todo) => todo.id === id)
-    if (index === -1) return
-    const [item] = todos.value.splice(index, 1)
-    todos.value.push(item)
+  const updateTextTodo = async (id, newText) => {
+    try {
+      const todo = todos.value.find((todo) => todo.id === id)
+
+      if (!todo) {
+        console.warn('Không tìm thấy todo với id:', id)
+        return
+      }
+
+      await todoService.updateTodo(id, { ...todo, text: newText })
+
+      todo.text = newText
+    } catch (err) {
+      console.error('Unexpected error:', err)
+    }
+  }
+  const updateCheckTodo = async (id, completed) => {
+    try {
+      const todo = todos.value.find((todo) => todo.id === id)
+
+      if (!todo) {
+        console.warn('Không tìm thấy todo với id:', id)
+        return
+      }
+
+      await todoService.updateTodo(id, { ...todo, completed: completed })
+      if (todo) {
+        todo.completed = completed
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err)
+    }
+  }
+  const moveToBottom = async (id) => {
+    try {
+      const index = todos.value.findIndex((todo) => todo.id === id)
+      if (index === -1) {
+        console.warn(`Todo với id ${id} không tồn tại.`)
+        return
+      }
+      const [todo] = todos.value.splice(index, 1)
+        todos.value.push(todo)
+        const newOrder = maxOrder.value + 1
+        todo.order = newOrder
+      await todoService.updateTodo(id, { ...todo, order: newOrder })
+    } catch (error) {
+      console.error('Lỗi khi di chuyển todo xuống cuối:', error)
+    }
+  }
+  const moveToTop = async (id) => {
+     try {
+       const index = todos.value.findIndex((todo) => todo.id === id)
+       if (index === -1) {
+         console.warn(`Todo với id ${id} không tồn tại.`)
+         return
+       }
+
+       const [todo] = todos.value.splice(index, 1)
+        todos.value.unshift(todo)
+        const newOrder = minOrder.value - 1
+        todo.order = newOrder
+       await todoService.updateTodo(id, { ...todo, order: newOrder })
+     } catch (error) {
+       console.error('Lỗi khi di chuyển todo xuống cuối:', error)
+     }
   }
   function sortTodos() {
     todos.value.sort((a, b) => a.id - b.id)
@@ -67,6 +133,8 @@ export const useTodoStore = defineStore('todos', () => {
     loading,
     error,
     completedTodoCount,
+    sortedTodos,
+    moveToTop,
     fetchTodos,
     addTodo,
     updateTextTodo,
