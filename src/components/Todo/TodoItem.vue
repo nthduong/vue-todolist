@@ -24,18 +24,15 @@ watch(
 )
 
 const toggleCompleted = () => {
-  if (isCheck.value === true) {
+  if (isCheck.value) {
     todoStore.moveToBottom(props.todo.id)
-  }
-  if (isCheck.value === false) {
+  } else {
     todoStore.moveToTop(props.todo.id)
   }
   emit('toggleCompleted', { id: props.todo.id, completed: isCheck.value })
   
 }
 const removeTodo = () => {
-  console.log(props.todo)
-
   emit('removeTodo', props.todo.id)
 }
 const showModal = () => {

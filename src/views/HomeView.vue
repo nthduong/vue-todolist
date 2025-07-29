@@ -11,8 +11,14 @@ onMounted(async () => {
   await todoStore.fetchTodos()
 })
 
-const sortTodos = () => {
-  todoStore.sortTodos()
+const sortByOldest = () => {
+  todoStore.sortByOldest()
+}
+const sortByNewest = () => {
+  todoStore.sortByNewest()
+}
+const sortByIncomplete = () => {
+  todoStore.sortByIncomplete()
 }
 const removeAll = () => {
   todoStore.removeAll()
@@ -28,9 +34,11 @@ const removeAll = () => {
       </h1>
     </div>
     <div class="mt-10 flex flex-col">
-      <div class="ml-auto">
+      <div class="ml-auto flex gap-y-3 flex-wrap justify-end">
         <button @click="removeAll" class="btn">Delete All</button>
-        <button @click="sortTodos" class="btn">Oldest Tasks</button>
+        <button @click="sortByOldest" class="btn">Sort by Oldest</button>
+        <button @click="sortByNewest" class="btn">Sort by Newest</button>
+        <button @click="sortByIncomplete" class="btn">Sort by Incomplete</button>
       </div>
       <todo-list class="relative" />
     </div>

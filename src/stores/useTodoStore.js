@@ -7,17 +7,28 @@ export const useTodoStore = defineStore('todos', () => {
   const todos = ref([])
   const loading = ref(false)
   const error = ref(null)
+  const sortMode = ref('sort-incomplete-first')
 
   const completedTodoCount = computed(() => todos.value.filter((todo) => !todo.completed).length)
-  const sortedTodos = computed(() =>
-    [...todos.value].sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)),
+
+  const sortedTodos = computed(() => {
+   if (sortMode.value === 'sort-created-oldest') {
+     return [...todos.value].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+   }
+   if (sortMode.value === 'sort-created-newest') {
+     return [...todos.value].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+   }
+   if (sortMode.value === 'sort-incomplete-first') {
+     return [...todos.value].sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity))
+   }
+   return todos.value
+ })
+  const orders = computed(() =>
+    todos.value.map((todo) => todo.order).filter((order) => typeof order === 'number'),
   )
-  const maxOrder = computed(() =>
-    Math.max(0, ...todos.value.map((todo) => todo.order).filter((order) => typeof order === 'number')),
-  )
-  const minOrder = Math.min(
-    ...todos.value.map((todo) => (typeof todo.order === 'number' ? todo.order : Infinity)),
-  )
+
+  const maxOrder = computed(() => (orders.value.length > 0 ? Math.max(...orders.value) : 0))
+  const minOrder = computed(() => (orders.value.length > 0 ? Math.min(...orders.value) : 0))
 
   const fetchTodos = async () => {
     loading.value = true
@@ -37,8 +48,8 @@ export const useTodoStore = defineStore('todos', () => {
         id: uuidv4(),
         text,
         completed: false,
-        createdAt: new Date().toISOString(),
-        order: maxOrder.value + 1 ,
+        createdAt: Date.now(),
+        order: maxOrder.value + 1,
       }
       const response = await todoService.createTodo(newTodo)
       todos.value.unshift(response.data)
@@ -84,6 +95,7 @@ export const useTodoStore = defineStore('todos', () => {
         return
       }
 
+
       await todoService.updateTodo(id, { ...todo, completed: completed })
       if (todo) {
         todo.completed = completed
@@ -103,7 +115,7 @@ export const useTodoStore = defineStore('todos', () => {
         todos.value.push(todo)
         const newOrder = maxOrder.value + 1
         todo.order = newOrder
-      await todoService.updateTodo(id, { ...todo, order: newOrder })
+        await todoService.updateTodo(id, { ...todo, order: newOrder })
     } catch (error) {
       console.error('Lỗi khi di chuyển todo xuống cuối:', error)
     }
@@ -116,17 +128,27 @@ export const useTodoStore = defineStore('todos', () => {
          return
        }
 
-       const [todo] = todos.value.splice(index, 1)
+        const [todo] = todos.value.splice(index, 1)
         todos.value.unshift(todo)
         const newOrder = minOrder.value - 1
         todo.order = newOrder
-       await todoService.updateTodo(id, { ...todo, order: newOrder })
+        await todoService.updateTodo(id, { ...todo, order: newOrder })
      } catch (error) {
-       console.error('Lỗi khi di chuyển todo xuống cuối:', error)
+       console.error('Lỗi khi di chuyển todo lên đầu:', error)
      }
   }
-  function sortTodos() {
-    todos.value.sort((a, b) => a.id - b.id)
+  const sortByOldest = () => {
+    setSortMode('sort-created-oldest')
+  }
+  const sortByNewest = () => {
+    setSortMode('sort-created-newest')
+  }
+  const sortByIncomplete = () => {
+    setSortMode('sort-incomplete-first')
+  }
+
+  const setSortMode = (mode) => {
+      sortMode.value = mode
   }
   return {
     todos,
@@ -140,7 +162,9 @@ export const useTodoStore = defineStore('todos', () => {
     updateTextTodo,
     updateCheckTodo,
     moveToBottom,
-    sortTodos,
+    sortByOldest,
+    sortByNewest,
+    sortByIncomplete,
     removeTodo,
     removeAll,
   }

@@ -47,7 +47,7 @@ const updateTextTodo = () => {
   }
 
   &__cancel {
-    background: #e84a5f;
+    background: #748873;
   }
 }
 
